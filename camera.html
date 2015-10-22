@@ -1,0 +1,294 @@
+
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=375,maximum-scale=2,user-scalable=no,minimal-ui"/>
+    <title>Camera API</title>
+    <style>
+        * {
+            padding: 0;
+            margin: 0;
+        }
+    </style>
+</head>
+
+<body>
+
+<div class="container">
+    <h1>Camera API</h1>
+
+    <section class="main-content">
+        <p style="font-size: 12px;">A demo of the Camera API, currently implemented in Firefox and Google Chrome on Android. Choose to take a picture with your device's camera and a preview will be shown through createObjectURL or a FileReader object (choosing local files supported too).</p>
+
+        <p>
+            <input type="file" id="take-picture" accept="image/*">
+        </p>
+
+        <h2>Preview:</h2>
+
+        <ul id="touchInfo" style="font-size: 20px;">
+            <li>Point length: <span></span></li>
+            <li>Point 1 position: <span></span></li>
+            <li>Point 2 position: <span></span></li>
+            <li>Behavious: <span></span></li>
+        </ul>
+
+        <canvas id="canvas"></canvas>
+    </section>
+</div>
+
+<script src="//localhost:35729/livereload.js"></script>
+
+<script>
+    "use strict";
+
+    //  limit browser drag move
+    document.addEventListener('touchmove', function (e) {
+        e.preventDefault();
+    },true);
+
+    (function () {
+        var takePicture = document.querySelector("#take-picture");
+
+        if (takePicture) {
+            // Set events
+            takePicture.onchange = function (event) {
+                // Get a reference to the taken picture or chosen file
+                var files = event.target.files;
+                var file;
+
+                if (files && files.length > 0) {
+                    file = files[0];
+
+                    try {
+                        // fallback if createObjectURL is not supported
+                        var fileReader = new FileReader();
+                        fileReader.readAsDataURL(file);
+
+                        fileReader.onload = function (event) {
+                            var imgSrc = event.target.result;
+                            var drawImg = new DrawImg();
+                            drawImg.preload(imgSrc);
+                        };
+                    }
+                    catch (e) {
+                        alert("FileReader are not supported");
+                    }
+                }
+            };
+        }
+
+        function DrawImg () {
+            var that = this;
+            var canvas = document.getElementById('canvas');
+            var ctx = canvas.getContext('2d');
+            var clientWidth = window.innerWidth;
+            var clientHeight = window.innerHeight;
+            canvas.width = clientWidth;
+            canvas.height = clientHeight;
+
+            this.boxBoundingX = parseInt(canvas.getBoundingClientRect().left);
+            this.boxBoundingY = parseInt(canvas.getBoundingClientRect().top);
+            console.log(this.boxBoundingY);
+
+            this.imgWidth = 100;
+            this.imgHeight = 100;
+
+            this.imgX = 0;
+            this.imgY = 0;
+
+            this.imgScale = 1;
+            this.oldImgScale = this.imgScale;
+
+            this.moveLocked = false;
+            this.moveLockedTimer = null;
+
+            this.preload = function (imgSrc) {
+                //  load img
+                that.img = new Image();
+                that.img.src = imgSrc;
+
+                console.log(that.img);
+                this.img.onload = function () {
+                    that.draw(this);
+
+                    that.bindEvent();
+                };
+            };
+
+            this.draw = function () {
+                ctx.clearRect(0, 0, clientWidth, clientHeight);
+
+                var imgWidth = Math.floor(that.imgWidth*that.imgScale);
+                var imgHeight = Math.floor(that.imgHeight*that.imgScale);
+
+                var imgX,
+                    imgY;
+
+                if (that.imgScale < that.oldImgScale) {
+                    imgX = that.imgX + (that.imgWidth - imgWidth)/2;
+                    imgY = that.imgY + (that.imgHeight - imgHeight)/2;
+                } else {
+                    imgX = that.imgX - (imgWidth - that.imgWidth)/2;
+                    imgY = that.imgY - (imgHeight - that.imgHeight)/2;
+                }
+
+                ctx.drawImage(that.img, imgX, imgY, imgWidth, imgHeight);
+            };
+
+            this.bindEvent = function () {
+                canvas.addEventListener('touchstart', touchStartHandler);
+                canvas.addEventListener('touchmove', touchMoveHandler);
+                canvas.addEventListener('touchend', touchEndHandler);
+
+                function touchStartHandler (evt) {
+                    var touches = evt.touches;
+
+                    clearTimeout(that.moveLockedTimer);
+
+                    if (touches.length == 1) {
+                        that.startedPointX = evt.touches[0].pageX - that.boxBoundingX;
+                        that.startedPointY = evt.touches[0].pageY - that.boxBoundingY;
+
+                        that.startedImgX = that.imgX;
+                        that.startedImgY = that.imgY;
+                    }
+
+                    if (touches.length == 2) {
+                        that.oldImgScale = that.imgScale;
+                        that.moveLocked = true;
+
+                        var curX = touches[0].pageX - that.boxBoundingX;
+                        var curY = touches[0].pageY - that.boxBoundingY;
+                        var curX2 = touches[1].pageX - that.boxBoundingX;
+                        var curY2 = touches[1].pageY - that.boxBoundingY;
+
+                        var newDistanceBetweenTwoPointsX = Math.abs(curX - curX2);
+                        var newDistanceBetweenTwoPointsY = Math.abs(curY - curY2);
+
+                        that.maxDistanceBetweenTwoPoints = Math.max(newDistanceBetweenTwoPointsX, newDistanceBetweenTwoPointsY);
+                    }
+                }
+
+                function touchEndHandler () {
+                    // free the double touch cause the picture move
+                    that.moveLockedTimer = setTimeout(function () {
+                        that.moveLocked = false;
+                    }, 100);
+                }
+
+                function touchMoveHandler (evt) {
+                    var touches = evt.touches;
+                    var curX = touches[0].pageX - that.boxBoundingX;
+                    var curY = touches[0].pageY - that.boxBoundingY;
+
+                    //  move img when touches point is single
+                    if (touches.length == 1 && that.moveLocked == false) {
+                        var newDistanceX = curX - that.startedPointX;
+                        var newDistanceY = curY - that.startedPointY;
+
+                        that.imgX = that.startedImgX + newDistanceX;
+                        that.imgY = that.startedImgY + newDistanceY;
+                    }
+
+                    //  scale img when touches point is double
+                    if (touches.length == 2) {
+                        that.moveLocked = true;
+                        var curX2 = touches[1].pageX - that.boxBoundingX;
+                        var curY2 = touches[1].pageY - that.boxBoundingY;
+
+                        var newDistanceBetweenTwoPointsX = Math.abs(curX - curX2);
+                        var newDistanceBetweenTwoPointsY = Math.abs(curY - curY2);
+                        var getMaxValue = Math.max(newDistanceBetweenTwoPointsX, newDistanceBetweenTwoPointsY);
+
+                        var statue,
+                            newScale;
+
+                        if (that.maxDistanceBetweenTwoPoints < getMaxValue) {
+                            statue = '放大';
+                            newScale = that.oldImgScale + parseFloat(((getMaxValue - that.maxDistanceBetweenTwoPoints) / 150).toFixed(2));
+
+                            if (newScale >= 0.1) that.imgScale = newScale;
+                        } else {
+                            statue = '缩小';
+                            newScale = that.oldImgScale - parseFloat(((that.maxDistanceBetweenTwoPoints - getMaxValue) / 150).toFixed(2));
+
+                            if (newScale >= 0.1) that.imgScale = newScale;
+                        }
+
+                        // debug
+                        var touchInfo = document.getElementById('touchInfo').getElementsByTagName('span');
+                        touchInfo[0].innerHTML = 2;
+                        touchInfo[1].innerHTML = touches[0].pageX - that.boxBoundingX;
+                        touchInfo[2].innerHTML = touches[1].pageX - that.boxBoundingX;
+                        touchInfo[3].innerHTML = statue + ': scale ' + that.imgScale;
+                    }
+
+                    that.draw();
+                }
+            }
+        }
+
+        var img = new Image();
+        img.src = "assets/images/2ED60DEB75DE47A98C8A6CBF1520B77D.jpg";
+
+        img.onload = function () {
+            var draw = new DrawImg();
+            draw.preload(this.src);
+        };
+
+    })();
+</script>
+
+
+<script>
+//    (function () {
+//        var takePicture = document.querySelector("#take-picture"),
+//                showPicture = document.querySelector("#show-picture");
+//
+//        if (takePicture && showPicture) {
+//            // Set events
+//            takePicture.onchange = function (event) {
+//                // Get a reference to the taken picture or chosen file
+//                var files = event.target.files,
+//                        file;
+//                if (files && files.length > 0) {
+//                    file = files[0];
+//                    a = event.target.files;
+//                    try {
+//                        // Create ObjectURL
+//                        var imgURL = window.URL.createObjectURL(file);
+//
+//                        // Set img src to ObjectURL
+//                        showPicture.src = imgURL;
+//
+//                        // Revoke ObjectURL
+//                        URL.revokeObjectURL(imgURL);
+//                    }
+//                    catch (e) {
+//                        try {
+//                            // Fallback if createObjectURL is not supported
+//                            var fileReader = new FileReader();
+//                            fileReader.onload = function (event) {
+//                                showPicture.src = event.target.result;
+//                            };
+//                            fileReader.readAsDataURL(file);
+//                        }
+//                        catch (e) {
+//                            //
+//                            var error = document.querySelector("#error");
+//                            if (error) {
+//                                error.innerHTML = "Neither createObjectURL or FileReader are supported";
+//                            }
+//                        }
+//                    }
+//                }
+//            };
+//        }
+//    })();
+</script>
+
+
+</body>
+</html>

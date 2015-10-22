@@ -12,14 +12,12 @@
     "grunt": "*",
     "grunt-contrib-clean": "*",
     "grunt-contrib-copy": "*",
-    "grunt-contrib-concat": "*",
     "grunt-contrib-less": "*",
-    "grunt-autoprefixer": "*",
-    "grunt-contrib-cssmin": "*",
-    "grunt-contrib-uglify": "*",
-    "grunt-contrib-htmlmin": "*",
-    "grunt-asset-injector": "*",
     "grunt-contrib-watch": "*",
-    "load-grunt-tasks": "*"
+    "load-grunt-tasks": "*",
+    "grunt-autoprefixer": "*"
+  },
+  "devDependencies": {
+    "grunt-string-replace": "^1.2.0"
   }
 }
