@@ -19,7 +19,7 @@
     <h1>Camera API</h1>
 
     <section class="main-content">
-        <p style="font-size: 12px;">A demo of the Camera API, currently implemented in Firefox and Google Chrome on Android. Choose to take a picture with your device's camera and a preview will be shown through createObjectURL or a FileReader object (choosing local files supported too).</p>
+        <p style="font-size: 8px;">A demo of the Camera API, currently implemented in Firefox and Google Chrome on Android. Choose to take a picture with your device's camera and a preview will be shown through createObjectURL or a FileReader object (choosing local files supported too).</p>
 
         <p>
             <input type="file" id="take-picture" accept="image/*">
@@ -27,12 +27,14 @@
 
         <h2>Preview:</h2>
 
-        <ul id="touchInfo" style="font-size: 20px;">
+        <ul id="touchInfo" style="font-size: 14px;">
             <li>Point length: <span></span></li>
             <li>Point 1 position: <span></span></li>
             <li>Point 2 position: <span></span></li>
             <li>Behavious: <span></span></li>
         </ul>
+
+        <img id="img" src="" alt=""/>
 
         <canvas id="canvas"></canvas>
     </section>
@@ -68,7 +70,9 @@
 
                         fileReader.onload = function (event) {
                             var imgSrc = event.target.result;
-                            var drawImg = new DrawImg();
+
+                            //  generator image editor
+                            var drawImg = new DrawImg(0);
                             drawImg.preload(imgSrc);
                         };
                     }
@@ -79,12 +83,12 @@
             };
         }
 
-        function DrawImg () {
+        function DrawImg (maskIndex) {
             var that = this;
             var canvas = document.getElementById('canvas');
             var ctx = canvas.getContext('2d');
-            var clientWidth = window.innerWidth;
-            var clientHeight = window.innerHeight;
+            var clientWidth = document.documentElement.clientWidth;
+            var clientHeight = document.documentElement.clientHeight;
             canvas.width = clientWidth;
             canvas.height = clientHeight;
 
@@ -92,6 +96,10 @@
             this.boxBoundingY = parseInt(canvas.getBoundingClientRect().top);
             console.log(this.boxBoundingY);
 
+            this.maskSprites = [];
+            this.maskIndex = maskIndex || 0;
+
+            this.isImageRotated = false;
             this.imgWidth = 100;
             this.imgHeight = 100;
 
@@ -105,36 +113,91 @@
             this.moveLockedTimer = null;
 
             this.preload = function (imgSrc) {
-                //  load img
-                that.img = new Image();
-                that.img.src = imgSrc;
+                var maskAmout = 1;
+                var imgAmount = 1 + maskAmout;
+                var loadedImageAmount = 0;
 
-                console.log(that.img);
+                //  preload mask images
+                for (var i = 0; i < maskAmout; i++) {
+                    var img = new Image();
+                    img.src = 'assets/images/mask1.png';
+                    img.index = i;
+                    img.onload = function () {
+                        loadedImageAmount++;
+                        that.maskSprites[this.index] = this;
+
+                        if (checkLoadedProcess()) goMainProcess();
+                    };
+
+                    img.onerror = function () {
+                        imgAmount -= 1;
+
+                        if (checkLoadedProcess()) goMainProcess();
+                    };
+                }
+
+                //  load user picture
+                this.img = new Image();
+                this.img.src = imgSrc;
+
                 this.img.onload = function () {
-                    that.draw(this);
+                    loadedImageAmount++;
 
-                    that.bindEvent();
+                    that.imgWidth = this.width;
+                    that.imgHeight = this.height;
+
+                    if (checkLoadedProcess()) goMainProcess();
                 };
+
+                this.img.onerror = function () {
+                    alert('图片加载失败, 请重新选择图片~');
+                };
+
+                function checkLoadedProcess () {
+                    console.log(loadedImageAmount , imgAmount);
+
+                    return loadedImageAmount / imgAmount == 1;
+                }
+
+                function goMainProcess () {
+                    that.draw(this);
+                    that.bindEvent();
+                }
             };
 
             this.draw = function () {
                 ctx.clearRect(0, 0, clientWidth, clientHeight);
 
+                //  draw user picture
+//                ctx.save();
+//                ctx.translate(canvas.width/2,canvas.height/2);
+//                ctx.rotate(90*Math.PI/180);
+
                 var imgWidth = Math.floor(that.imgWidth*that.imgScale);
                 var imgHeight = Math.floor(that.imgHeight*that.imgScale);
 
                 var imgX,
-                    imgY;
+                        imgY;
 
                 if (that.imgScale < that.oldImgScale) {
                     imgX = that.imgX + (that.imgWidth - imgWidth)/2;
                     imgY = that.imgY + (that.imgHeight - imgHeight)/2;
                 } else {
-                    imgX = that.imgX - (imgWidth - that.imgWidth)/2;
-                    imgY = that.imgY - (imgHeight - that.imgHeight)/2;
+                    imgX = that.imgX - (imgWidth - that.imgWidth) / 2;
+                    imgY = that.imgY - (imgHeight - that.imgHeight) / 2;
                 }
 
                 ctx.drawImage(that.img, imgX, imgY, imgWidth, imgHeight);
+
+                //  restore ctx setting
+//                ctx.restore();
+
+                // draw mask
+                var mask = that.maskSprites[that.maskIndex];
+                var maskWidth = parseInt(mask.width/2);
+                var maskHeight = parseInt(mask.height/2);
+
+                ctx.drawImage(mask, parseInt(canvas.width/2) - parseInt(maskWidth/2), 0, maskWidth, maskHeight);
             };
 
             this.bindEvent = function () {
@@ -153,6 +216,7 @@
 
                         that.startedImgX = that.imgX;
                         that.startedImgY = that.imgY;
+
                     }
 
                     if (touches.length == 2) {
@@ -188,8 +252,13 @@
                         var newDistanceX = curX - that.startedPointX;
                         var newDistanceY = curY - that.startedPointY;
 
-                        that.imgX = that.startedImgX + newDistanceX;
-                        that.imgY = that.startedImgY + newDistanceY;
+                        if (that.isImageRotated) {
+                            that.imgX = that.startedImgX + newDistanceX;
+                            that.imgY = that.startedImgY + newDistanceY;
+                        } else {
+                            that.imgX = that.startedImgX + newDistanceX;
+                            that.imgY = that.startedImgY + newDistanceY;
+                        }
                     }
 
                     //  scale img when touches point is double
@@ -207,12 +276,12 @@
 
                         if (that.maxDistanceBetweenTwoPoints < getMaxValue) {
                             statue = '放大';
-                            newScale = that.oldImgScale + parseFloat(((getMaxValue - that.maxDistanceBetweenTwoPoints) / 150).toFixed(2));
+                            newScale = that.oldImgScale + parseFloat(((getMaxValue - that.maxDistanceBetweenTwoPoints) / 200).toFixed(2));
 
                             if (newScale >= 0.1) that.imgScale = newScale;
                         } else {
                             statue = '缩小';
-                            newScale = that.oldImgScale - parseFloat(((that.maxDistanceBetweenTwoPoints - getMaxValue) / 150).toFixed(2));
+                            newScale = that.oldImgScale - parseFloat(((that.maxDistanceBetweenTwoPoints - getMaxValue) / 200).toFixed(2));
 
                             if (newScale >= 0.1) that.imgScale = newScale;
                         }
@@ -230,13 +299,13 @@
             }
         }
 
-        var img = new Image();
-        img.src = "assets/images/2ED60DEB75DE47A98C8A6CBF1520B77D.jpg";
-
-        img.onload = function () {
-            var draw = new DrawImg();
-            draw.preload(this.src);
-        };
+//        var img = new Image();
+//        img.src = "assets/images/sam.jpg";
+//
+//        img.onload = function () {
+//            var draw = new DrawImg();
+//            draw.preload(this.src);
+//        };
 
     })();
 </script>

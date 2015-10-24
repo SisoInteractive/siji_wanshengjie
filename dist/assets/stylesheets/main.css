@@ -5,8 +5,6 @@
   padding: 0;
   margin: 0;
   -webkit-backface-visibility: hidden;
-  -webkit-transform: translateZ(0) scale(1, 1);
-  -webkit-tap-highlight-color: rgba(0, 0, 0, 0);
   -webkit-tap-highlight-color: transparent;
   /* For some Androids */
   outline: none;
@@ -35,12 +33,23 @@ span {
 input {
   outline: none;
 }
+.pa {
+  position: absolute;
+}
+.pa.tc {
+  left: 0;
+  right: 0;
+}
+.tc {
+  text-align: center;
+}
 /* the class "content" is used for flexible plugin */
 .content {
   display: block;
   min-width: 320px;
   margin: 0 auto;
   max-width: 750px;
+  max-height: 1206px;
 }
 /* swiper */
 .swiper-container {
@@ -53,12 +62,200 @@ input {
   width: 100%;
   height: 100%;
 }
+.swiper-slide {
+  font-size: 58px;
+  background: cornsilk;
+}
 /* scene */
 .scene {
   -webkit-perspective: 3000;
           perspective: 3000;
   -webkit-backface-visibility: hidden;
           backface-visibility: hidden;
+}
+/* scene 01 */
+.scene01 {
+  background: url("../images/bg-s1.jpg") no-repeat;
+  background-size: cover;
+}
+.scene01 .pa {
+  opacity: 0;
+}
+.scene01 .logo01 {
+  top: 0.66666667rem;
+}
+.scene01 .logo01 img {
+  width: 4.26666667rem;
+}
+.scene01 .logo02 {
+  top: 1.6rem;
+}
+.scene01 .logo02 img {
+  width: 4.33333333rem;
+}
+.scene01 .bianfu {
+  left: 0.24rem;
+  top: 3.06666667rem;
+  -webkit-transform: translate3d(100px, 60px, 0);
+          transform: translate3d(100px, 60px, 0);
+  -webkit-transition: all ease .6s;
+          transition: all ease .6s;
+  z-index: 10;
+}
+.scene01 .bianfu img {
+  width: 2.28rem;
+}
+.scene01 .bianfu02 {
+  left: 2.57333333rem;
+  top: 6.81333333rem;
+  -webkit-transform: translate3d(60px, 40px, 0) scale(0);
+          transform: translate3d(60px, 40px, 0) scale(0);
+  -webkit-transition: all ease .6s;
+          transition: all ease .6s;
+  z-index: 10;
+}
+.scene01 .maozi {
+  left: 4.12rem;
+  top: 4.4rem;
+  z-index: 10;
+}
+.scene01 .ghost {
+  right: 0rem;
+  top: 4.70666667rem;
+  -webkit-transform: translate3d(-60px, 100px, 0) scale(0);
+          transform: translate3d(-60px, 100px, 0) scale(0);
+  -webkit-transition: all ease 1.2s;
+          transition: all ease 1.2s;
+}
+.scene01 .ghost img {
+  width: 5.64rem;
+}
+.scene01 .title {
+  left: 0rem;
+  top: 5.14666667rem;
+  z-index: 5;
+}
+.scene01 .nangua {
+  left: 0rem;
+  top: 6.38666667rem;
+  z-index: 2;
+}
+.scene01 .date {
+  left: 6.42666667rem;
+  top: 7.34666667rem;
+  z-index: 3;
+}
+.scene01 .title02 {
+  top: 11.36rem;
+}
+.scene01 .title02 img {
+  width: 7.17333333rem;
+}
+.scene01 .date02 {
+  bottom: 1.09333333rem;
+}
+.scene01 .date02 img {
+  width: 2.49333333rem;
+}
+.scene01 .date03 {
+  bottom: 0.57333333rem;
+}
+.scene01 .date03 img {
+  width: 4.14666667rem;
+}
+.scene01.active .logo01,
+.scene01.active .logo02 {
+  -webkit-animation: fadeIn 1.2s ease 1 forwards;
+}
+.scene01.active .title {
+  -webkit-animation: zoomIn 1.2s ease 1 forwards;
+}
+.scene01.active .nangua {
+  -webkit-animation: rubberBand .8s ease .4s 1 forwards;
+}
+.scene01.active .nangua img {
+  -webkit-animation: tada 2s ease 4s infinite forwards;
+}
+.scene01.active .date {
+  -webkit-animation: rotateIn 1.2s ease-out 0.7s 1 forwards;
+}
+.scene01.active .title02 {
+  -webkit-animation: bounceInUp 1.2s ease 1s 1 forwards;
+}
+.scene01.active .date02 {
+  -webkit-animation: bounceInUp 1.2s ease 1.2s 1 forwards;
+}
+.scene01.active .date03 {
+  -webkit-animation: bounceInUp 1.2s ease 1.4s 1 forwards;
+}
+.scene01.active .bianfu {
+  opacity: 1;
+  -webkit-transform: translate3d(0, 0, 0) scale(1);
+          transform: translate3d(0, 0, 0) scale(1);
+  -webkit-transition-delay: .8s;
+          transition-delay: .8s;
+}
+.scene01.active .bianfu img {
+  -webkit-animation: flash 1.5s ease 2.8s infinite forwards;
+}
+.scene01.active .bianfu02 {
+  opacity: 1;
+  -webkit-transform: translate3d(0, 0, 0) scale(1);
+          transform: translate3d(0, 0, 0) scale(1);
+  -webkit-transition-delay: .9s;
+          transition-delay: .9s;
+}
+.scene01.active .ghost {
+  opacity: 1;
+  -webkit-transform: translate3d(0, 0, 0) scale(1);
+          transform: translate3d(0, 0, 0) scale(1);
+  -webkit-transition-delay: 2s;
+          transition-delay: 2s;
+}
+/* scene activity */
+.scene-activity {
+  background: url("../images/bg-sa.jpg") no-repeat;
+  background-size: cover;
+}
+.scene-activity .pa {
+  opacity: 0;
+}
+.scene-activity .title {
+  opacity: 1;
+  top: 0.56rem;
+}
+.scene-activity .bianfu {
+  top: 0.88rem;
+  left: 0.54666667rem;
+  z-index: 2;
+}
+.scene-activity .bianfu img {
+  width: 1.69333333rem;
+}
+.scene-activity .nangua {
+  top: 0.78666667rem;
+  right: 0rem;
+}
+.scene-activity .nangua img {
+  width: 3.02666667rem;
+}
+.scene-activity .bd {
+  top: 2.21333333rem;
+}
+.scene-activity.active .title {
+  -webkit-animation: tada 1.2s ease 1s 1 forwards;
+}
+.scene-activity.active .bianfu {
+  -webkit-animation: bounceInLeft .8s ease 1.8s 1 forwards;
+}
+.scene-activity.active .bianfu img {
+  -webkit-animation: flyLeft 2s ease 4s infinite forwards;
+}
+.scene-activity.active .nangua {
+  -webkit-animation: bounceInRight .8s ease 2.2s 1 forwards;
+}
+.scene-activity.active .bd {
+  -webkit-animation: zoomIn .6s ease .2s 1 forwards;
 }
 /*======================================================================
       Responsive

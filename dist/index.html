@@ -7,30 +7,83 @@
     <meta content="maximum-dpr=2" name="flexible" />
     <meta name="apple-touch-fullscreen" content="no"/>
     <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent"/>
-    <meta name="apple-mobile-web-app-status-bar-style" content="black"/>
     <title></title>
 
     <!-- injector:css -->
     <script src="assets/scripts/flexible.js"></script>
-
+    <script>
+        console.log(lib.flexible.rem)
+    </script>
     <link rel="stylesheet" href="assets/stylesheets/main.css"/>
+    <link rel="stylesheet" href="assets/stylesheets/a.css"/>
     <link rel="stylesheet" href="assets/stylesheets/swiper.min.css"/>
     <!-- endinjector -->
 </head>
 <body>
 
-<!--&lt;!&ndash; the class "content" is used for flexible plugin &ndash;&gt;-->
-<!--<div class="swiper-container content">-->
-    <!--<div class="swiper-wrapper">-->
-        <!--<div class="swiper-slide">Slide 1</div>-->
-        <!--<div class="swiper-slide">Slide 2</div>-->
-        <!--<div class="swiper-slide">Slide 3</div>-->
-    <!--</div>-->
-<!--</div>-->
+<!-- the class "content" is used for flexible plugin -->
+<div class="swiper-container content">
+    <div class="swiper-wrapper">
+        <div class="swiper-slide scene scene01">
+            <div class="pa logo01 tc">
+                <img src="assets/images/s1-logo01.png" alt=""/>
+            </div>
 
-<!--<audio id="audio" src=""></audio>-->
+            <div class="pa logo02 tc">
+                <img src="assets/images/s1-logo02.png" alt=""/>
+            </div>
 
-<input type="file" accept="image/*;capture=camera">
+            <div class="pa bianfu">
+                <img src="assets/images/s1-bianfu.png" alt=""/>
+            </div>
+            <img class="pa bianfu02" src="assets/images/s1-bianfu02.png" alt=""/>
+
+            <img class="pa maozi" src="assets/images/s1-maozi.png" alt=""/>
+            <div class="pa ghost">
+                <img src="assets/images/s1-ghost.png" alt=""/>
+            </div>
+
+            <img class="pa title" src="assets/images/s1-title.png" alt=""/>
+
+            <div class="pa nangua bounceOutLeft tc">
+                <img src="assets/images/s1-nangua.png" alt=""/>
+            </div>
+            <img class="pa date" src="assets/images/s1-date.png" alt=""/>
+
+            <div class="pa title02 tc">
+                <img src="assets/images/s1-title02.png" alt=""/>
+            </div>
+
+            <div class="pa date02 tc">
+                <img src="assets/images/s1-date02.png" alt=""/>
+            </div>
+
+            <div class="pa date03 tc">
+                <img src="assets/images/s1-date03.png" alt=""/>
+            </div>
+        </div>
+
+        <div class="swiper-slide scene scene-activity">
+            <div class="pa title tc">
+                <img src="assets/images/sa-title.png" alt=""/>
+            </div>
+
+            <div class="pa bianfu">
+                <img src="assets/images/sa-bianfu.png" alt=""/>
+            </div>
+
+            <div class="pa nangua">
+                <img src="assets/images/sa-nangua.png" alt=""/>
+            </div>
+
+            <div class="pa bd tc">
+                <img src="assets/images/sa-content.png" alt=""/>
+            </div>
+        </div>
+    </div>
+</div>
+
+<audio id="audio" src=""></audio>
 
 <!-- injector:js -->
 <!-- page -->

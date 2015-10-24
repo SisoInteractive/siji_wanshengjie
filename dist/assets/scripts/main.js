@@ -17,14 +17,16 @@ var app = {
             noSwiping: false,
 
             // init
-            onInit: function () {
+            onInit: function (swiper) {
+                $('.scene').eq(swiper.activeIndex).addClass('active');
             },
 
             onTransitionStart: function (swiper) {
             },
 
             onTransitionEnd: function (swiper) {
-
+                $('.scene').removeClass('active');
+                $('.scene').eq(swiper.activeIndex).addClass('active');
             }
         });
 

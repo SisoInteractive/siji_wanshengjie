@@ -7,8 +7,6 @@
   padding: 0;
   margin: 0;
   -webkit-backface-visibility: hidden;
-  -webkit-transform: translateZ(0) scale(1, 1);
-  -webkit-tap-highlight-color: rgba(0,0,0,0);
   -webkit-tap-highlight-color: transparent; /* For some Androids */
   outline: none;
 }
@@ -40,16 +38,45 @@ input {
   outline: none;
 }
 
-@page-width : 750;
-@page-rem   : page-width / 10;
+.pa { position: absolute; }
 
+.pa.tc { left: 0; right: 0;}
+
+.tc { text-align: center; }
+
+@page-base-rem : 75;
+
+.calWidth (@value) {
+  width: @value*1rem / @page-base-rem;
+}
+
+.calHeight (@value) {
+  height: @value*1rem / @page-base-rem;
+}
+
+.calTop (@value) {
+  top: @value*1rem / @page-base-rem;
+}
+
+.calBottom (@value) {
+  bottom: @value*1rem / @page-base-rem;
+}
+
+.calLeft (@value) {
+  left: @value*1rem / @page-base-rem;
+}
+
+.calRight (@value) {
+  right: @value*1rem / @page-base-rem;
+}
 
 /* the class "content" is used for flexible plugin */
 .content{
-    display: block;
-    min-width: 320px;
-    margin: 0 auto;
-    max-width: 750px;
+  display: block;
+  min-width: 320px;
+  margin: 0 auto;
+  max-width: 750px;
+  max-height: 1206px;
 }
 
 /* swiper */
@@ -57,17 +84,243 @@ input {
   position: relative;
   width: 100%;
   height: 100%;
+
 }
 .swiper-wrapper{
   position: relative;
   width: 100%;
   height: 100%;
 }
+.swiper-slide{
+  font-size: 58px;
+  background: cornsilk;
+}
 
 /* scene */
 .scene {
   perspective: 3000;
   backface-visibility: hidden;
+}
+
+/* scene 01 */
+.scene01 {
+  background: url("../images/bg-s1.jpg") no-repeat;
+  background-size: cover;
+
+  .pa { opacity: 0; }
+
+  .logo01{
+    .calTop(50);
+
+    img {
+      .calWidth(320);
+    }
+  }
+
+  .logo02{
+    .calTop(120);
+
+    img {
+      .calWidth(325);
+    }
+  }
+
+  .bianfu {
+    .calLeft(18);
+    .calTop(230);
+
+    img {
+      .calWidth(171);
+    }
+
+    transform: translate3d(100px, 60px, 0);
+    transition: all ease .6s;
+    z-index: 10;
+  }
+
+  .bianfu02 {
+    .calLeft(193);
+    .calTop(511);
+
+    transform: translate3d(60px, 40px, 0) scale(0);
+    transition: all ease .6s;
+    z-index: 10;
+  }
+
+  .maozi {
+    .calLeft(309);
+    .calTop(330);
+    z-index: 10;
+  }
+
+  .ghost {
+    .calRight(0);
+    .calTop(353);
+    transform: translate3d(-60px, 100px, 0) scale(0);
+    transition: all ease 1.2s;
+
+    img {
+      .calWidth(423);
+    }
+  }
+
+  .title {
+    .calLeft(0);
+    .calTop(386);
+    z-index: 5;
+  }
+
+  .nangua {
+    .calLeft(0);
+    .calTop(479);
+    z-index: 2;
+  }
+
+  .date {
+    .calLeft(482);
+    .calTop(551);
+    z-index: 3;
+  }
+
+  .title02 {
+    .calTop(852);
+
+    img {
+      .calWidth(538);
+    }
+  }
+
+  .date02 {
+    .calBottom(82);
+
+    img {
+      .calWidth(187);
+    }
+  }
+
+  .date03 {
+    .calBottom(43);
+
+    img {
+      .calWidth(311);
+    }
+  }
+}
+
+.scene01.active {
+  .logo01, .logo02 {
+    -webkit-animation: fadeIn 1.2s ease 1 forwards;
+  }
+
+  .title {
+    -webkit-animation: zoomIn 1.2s ease 1 forwards;
+  }
+
+  .nangua {
+    -webkit-animation: rubberBand .8s ease .4s 1 forwards;
+
+    img {
+      -webkit-animation: tada 2s ease 4s infinite forwards;
+    }
+  }
+
+  .date {
+    -webkit-animation: rotateIn 1.2s ease-out .7s 1 forwards;
+  }
+
+  .title02 {
+    -webkit-animation: bounceInUp 1.2s ease 1s 1 forwards;
+  }
+
+  .date02 {
+    -webkit-animation: bounceInUp 1.2s ease 1.2s 1 forwards;
+  }
+
+  .date03 {
+    -webkit-animation: bounceInUp 1.2s ease 1.4s 1 forwards;
+  }
+
+  .bianfu {
+    opacity: 1;
+    transform: translate3d(0, 0, 0) scale(1);
+    transition-delay: .8s;
+
+    img {
+      -webkit-animation: flash 1.5s ease 2.8s infinite forwards;
+    }
+  }
+
+  .bianfu02 {
+    opacity: 1;
+    transform: translate3d(0, 0, 0) scale(1);
+    transition-delay: .9s;
+  }
+
+  .ghost {
+    opacity: 1;
+    transform: translate3d(0, 0, 0) scale(1);
+    transition-delay: 2s;
+  }
+}
+
+/* scene activity */
+.scene-activity {
+  background: url("../images/bg-sa.jpg") no-repeat;
+  background-size: cover;
+
+  .pa {
+    opacity: 0;
+  }
+
+  .title {
+    opacity: 1;
+    .calTop(42);
+  }
+
+  .bianfu {
+    .calTop(66);
+    .calLeft(41);
+    z-index: 2;
+
+     img {
+       .calWidth(127);
+     }
+   }
+
+  .nangua {
+    .calTop(59);
+    .calRight(0);
+
+    img {
+      .calWidth(227);
+    }
+  }
+
+  .bd {
+    .calTop(166);
+  }
+}
+
+.scene-activity.active {
+  .title {
+    -webkit-animation: tada 1.2s ease 1s 1 forwards;
+  }
+
+  .bianfu {
+    -webkit-animation: bounceInLeft .8s ease 1.8s 1 forwards;
+
+    img {
+      -webkit-animation: flyLeft 2s ease 4s infinite forwards;
+    }
+  }
+
+  .nangua {
+    -webkit-animation: bounceInRight .8s ease 2.2s 1 forwards;
+  }
+
+  .bd {
+    -webkit-animation: zoomIn .6s ease .2s 1 forwards;
+  }
 }
 
 /*======================================================================
