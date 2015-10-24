@@ -111,6 +111,15 @@ input {
   background: url("../images/bg-s1.jpg") no-repeat;
   background-size: cover;
 }
+.loading .bg:before {
+  content: '';
+  position: absolute;
+  left: 0;
+  top: 0;
+  right: 0;
+  bottom: 0;
+  background: rgba(0, 0, 0, 0.55);
+}
 .loading.finished .nangua {
   -webkit-animation: none;
           animation: none;

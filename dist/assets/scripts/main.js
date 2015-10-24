@@ -18,15 +18,17 @@ var app = {
 
             // init
             onInit: function (swiper) {
-                $('.scene').eq(swiper.activeIndex).addClass('active');
+                setTimeout(function () {
+                    $('.scene').eq(swiper.activeIndex).addClass('active');
+                }, 4600);
             },
 
             onTransitionStart: function (swiper) {
             },
 
             onTransitionEnd: function (swiper) {
-                $('.scene').removeClass('active');
-                $('.scene').eq(swiper.activeIndex).addClass('active');
+                $('.scene').removeClass('active')
+                    .eq(swiper.activeIndex).addClass('active');
             }
         });
 
@@ -46,15 +48,20 @@ var app = {
 };
 
 $(function (){
-    // init app
-    app.start();
-    console.log('app started success...');
-
+    //  loading
     setTimeout(function () {
         $('.loading').addClass('finished');
 
+        // init app
+        app.start();
+        console.log('app started success...');
+
         setTimeout(function () {
             $('.loading').addClass('leave');
-        }, 2000);
+
+            setTimeout(function () {
+                $('.loading').addClass('leaved');
+            }, 2600);
+        }, 1800);
     }, 2000);
 });
