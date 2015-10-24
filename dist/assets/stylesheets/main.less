@@ -96,6 +96,97 @@ input {
   background: cornsilk;
 }
 
+/* loading */
+.loading {
+  left: 0;
+  top: 0;
+  right: 0;
+  bottom: 0;
+  z-index: 100;
+
+  .content-wrap {
+    z-index: 100;
+    left: 0;
+    top: 0;
+    right: 0;
+    bottom: 0;
+  }
+
+  .nangua {
+    .calTop(511);
+    z-index: 2;
+    background: url("../images/loading-nangua.png") no-repeat center center;
+    -webkit-animation: bounce 1.2s ease .4s infinite forwards;
+
+    img {
+      opacity: 0;
+      .calWidth(288);
+      vertical-align: top;
+      transition: all 2.4s;
+    }
+  }
+
+  .text {
+    .calTop(745);
+    background: url("../images/loading-loading.png") no-repeat center center;
+    z-index: 2;
+
+    img {
+      vertical-align: top;
+      opacity: 0;
+    }
+  }
+
+  .bg {
+    left: 0;
+    top: 0;
+    right: 0;
+    bottom: 0;
+//    background: rgba(20, 0, 0, .75);
+    background: url("../images/bg-s1.jpg") no-repeat;
+    background-size: cover;
+  }
+}
+
+.loading.finished {
+  .nangua {
+    animation: none;
+
+    img {
+      opacity: 1;
+      transition-delay: .6s;
+    }
+  }
+
+  .text {
+    background: none;
+
+    img {
+      opacity: 1;
+    }
+  }
+}
+
+.loading.leave {
+  opacity: 0;
+  transition: opacity 1s 2s;
+
+  .bg {
+    transform: scale(10);
+    transition: all 2s;
+  }
+
+  .content-wrap {
+    transform: scale(10);
+    transition: all 4s;
+    transition-delay: .8s;
+  }
+}
+
+.loading.leaved {
+  z-index: 0;
+}
+
 /* scene */
 .scene {
   perspective: 3000;
@@ -246,7 +337,7 @@ input {
     transition-delay: .8s;
 
     img {
-      -webkit-animation: flash 1.5s ease 2.8s infinite forwards;
+      -webkit-animation: flash 1.5s ease 3s infinite forwards;
     }
   }
 
@@ -265,61 +356,29 @@ input {
 
 /* scene activity */
 .scene-activity {
-  background: url("../images/bg-sa.jpg") no-repeat;
+  background: url("../images/bg-sa.png") no-repeat;
   background-size: cover;
 
   .pa {
     opacity: 0;
   }
 
-  .title {
-    opacity: 1;
-    .calTop(42);
-  }
-
-  .bianfu {
-    .calTop(66);
-    .calLeft(41);
-    z-index: 2;
-
-     img {
-       .calWidth(127);
-     }
-   }
-
   .nangua {
-    .calTop(59);
+    .calTop(75);
     .calRight(0);
+    transform: translate3d(100%, 0, 0);
+    transition: all 1.2s;
 
     img {
-      .calWidth(227);
+      .calWidth(210);
     }
-  }
-
-  .bd {
-    .calTop(166);
   }
 }
 
 .scene-activity.active {
-  .title {
-    -webkit-animation: tada 1.2s ease 1s 1 forwards;
-  }
-
-  .bianfu {
-    -webkit-animation: bounceInLeft .8s ease 1.8s 1 forwards;
-
-    img {
-      -webkit-animation: flyLeft 2s ease 4s infinite forwards;
-    }
-  }
-
   .nangua {
-    -webkit-animation: bounceInRight .8s ease 2.2s 1 forwards;
-  }
-
-  .bd {
-    -webkit-animation: zoomIn .6s ease .2s 1 forwards;
+    opacity: 1;
+    transform: translate3d(0, 0, 0);
   }
 }
 

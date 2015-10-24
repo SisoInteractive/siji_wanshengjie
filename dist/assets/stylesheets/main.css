@@ -66,6 +66,90 @@ input {
   font-size: 58px;
   background: cornsilk;
 }
+/* loading */
+.loading {
+  left: 0;
+  top: 0;
+  right: 0;
+  bottom: 0;
+  z-index: 100;
+}
+.loading .content-wrap {
+  z-index: 100;
+  left: 0;
+  top: 0;
+  right: 0;
+  bottom: 0;
+}
+.loading .nangua {
+  top: 6.81333333rem;
+  z-index: 2;
+  background: url("../images/loading-nangua.png") no-repeat center center;
+  -webkit-animation: bounce 1.2s ease .4s infinite forwards;
+}
+.loading .nangua img {
+  opacity: 0;
+  width: 3.84rem;
+  vertical-align: top;
+  -webkit-transition: all 2.4s;
+          transition: all 2.4s;
+}
+.loading .text {
+  top: 9.93333333rem;
+  background: url("../images/loading-loading.png") no-repeat center center;
+  z-index: 2;
+}
+.loading .text img {
+  vertical-align: top;
+  opacity: 0;
+}
+.loading .bg {
+  left: 0;
+  top: 0;
+  right: 0;
+  bottom: 0;
+  background: url("../images/bg-s1.jpg") no-repeat;
+  background-size: cover;
+}
+.loading.finished .nangua {
+  -webkit-animation: none;
+          animation: none;
+}
+.loading.finished .nangua img {
+  opacity: 1;
+  -webkit-transition-delay: .6s;
+          transition-delay: .6s;
+}
+.loading.finished .text {
+  background: none;
+}
+.loading.finished .text img {
+  opacity: 1;
+}
+.loading.leave {
+  opacity: 0;
+  -webkit-transition: opacity 1s 2s;
+          transition: opacity 1s 2s;
+}
+.loading.leave .bg {
+  -webkit-transform: scale(10);
+      -ms-transform: scale(10);
+          transform: scale(10);
+  -webkit-transition: all 2s;
+          transition: all 2s;
+}
+.loading.leave .content-wrap {
+  -webkit-transform: scale(10);
+      -ms-transform: scale(10);
+          transform: scale(10);
+  -webkit-transition: all 4s;
+          transition: all 4s;
+  -webkit-transition-delay: .8s;
+          transition-delay: .8s;
+}
+.loading.leaved {
+  z-index: 0;
+}
 /* scene */
 .scene {
   -webkit-perspective: 3000;
@@ -196,7 +280,7 @@ input {
           transition-delay: .8s;
 }
 .scene01.active .bianfu img {
-  -webkit-animation: flash 1.5s ease 2.8s infinite forwards;
+  -webkit-animation: flash 1.5s ease 3s infinite forwards;
 }
 .scene01.active .bianfu02 {
   opacity: 1;
@@ -214,48 +298,27 @@ input {
 }
 /* scene activity */
 .scene-activity {
-  background: url("../images/bg-sa.jpg") no-repeat;
+  background: url("../images/bg-sa.png") no-repeat;
   background-size: cover;
 }
 .scene-activity .pa {
   opacity: 0;
 }
-.scene-activity .title {
-  opacity: 1;
-  top: 0.56rem;
-}
-.scene-activity .bianfu {
-  top: 0.88rem;
-  left: 0.54666667rem;
-  z-index: 2;
-}
-.scene-activity .bianfu img {
-  width: 1.69333333rem;
-}
 .scene-activity .nangua {
-  top: 0.78666667rem;
+  top: 1rem;
   right: 0rem;
+  -webkit-transform: translate3d(100%, 0, 0);
+          transform: translate3d(100%, 0, 0);
+  -webkit-transition: all 1.2s;
+          transition: all 1.2s;
 }
 .scene-activity .nangua img {
-  width: 3.02666667rem;
-}
-.scene-activity .bd {
-  top: 2.21333333rem;
-}
-.scene-activity.active .title {
-  -webkit-animation: tada 1.2s ease 1s 1 forwards;
-}
-.scene-activity.active .bianfu {
-  -webkit-animation: bounceInLeft .8s ease 1.8s 1 forwards;
-}
-.scene-activity.active .bianfu img {
-  -webkit-animation: flyLeft 2s ease 4s infinite forwards;
+  width: 2.8rem;
 }
 .scene-activity.active .nangua {
-  -webkit-animation: bounceInRight .8s ease 2.2s 1 forwards;
-}
-.scene-activity.active .bd {
-  -webkit-animation: zoomIn .6s ease .2s 1 forwards;
+  opacity: 1;
+  -webkit-transform: translate3d(0, 0, 0);
+          transform: translate3d(0, 0, 0);
 }
 /*======================================================================
       Responsive

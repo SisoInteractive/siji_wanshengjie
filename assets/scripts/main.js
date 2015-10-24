@@ -49,4 +49,12 @@ $(function (){
     // init app
     app.start();
     console.log('app started success...');
+
+    setTimeout(function () {
+        $('.loading').addClass('finished');
+
+        setTimeout(function () {
+            $('.loading').addClass('leave');
+        }, 2000);
+    }, 2000);
 });
