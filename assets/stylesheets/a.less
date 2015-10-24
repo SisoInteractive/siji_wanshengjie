@@ -330,6 +330,12 @@
   }
 }
 
+@keyframes flyUp {
+  50% {
+    transform: translate3d(0, -15px, 0);
+  }
+}
+
 @-webkit-keyframes bounce {
   0%, 20%, 53%, 80%, 100% {
     -webkit-transition-timing-function: cubic-bezier(0.215, 0.610, 0.355, 1.000);
@@ -392,4 +398,10 @@
   -webkit-transform-origin: center bottom;
   -ms-transform-origin: center bottom;
   transform-origin: center bottom;
+}
+
+@keyframes zoom {
+  50% {
+    transform: scale(1.1);
+  }
 }

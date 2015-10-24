@@ -315,6 +315,18 @@
             transform: translate3d(-5px, 5px, 0);
   }
 }
+@-webkit-keyframes flyUp {
+  50% {
+    -webkit-transform: translate3d(0, -15px, 0);
+            transform: translate3d(0, -15px, 0);
+  }
+}
+@keyframes flyUp {
+  50% {
+    -webkit-transform: translate3d(0, -15px, 0);
+            transform: translate3d(0, -15px, 0);
+  }
+}
 @-webkit-keyframes bounce {
   0%,
   20%,
@@ -379,4 +391,16 @@
   -webkit-transform-origin: center bottom;
   -ms-transform-origin: center bottom;
   transform-origin: center bottom;
+}
+@-webkit-keyframes zoom {
+  50% {
+    -webkit-transform: scale(1.1);
+            transform: scale(1.1);
+  }
+}
+@keyframes zoom {
+  50% {
+    -webkit-transform: scale(1.1);
+            transform: scale(1.1);
+  }
 }
