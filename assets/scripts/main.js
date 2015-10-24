@@ -110,33 +110,33 @@ var app = {
 
 $(function (){
     //  loading
-    //setTimeout(function () {
-    //    $('.loading').addClass('finished');
-    //
-    //    // init app
-    //    app.start();
-    //    console.log('app started success...');
-    //
-    //    setTimeout(function () {
-    //        $('.loading').addClass('leave');
-    //
-    //        setTimeout(function () {
-    //            $('.loading').addClass('leaved');
-    //        }, 2600);
-    //    }, 1800);
-    //}, 2000);
+    setTimeout(function () {
+        $('.loading').addClass('finished');
+
+        // init app
+        app.start();
+        console.log('app started success...');
+
+        setTimeout(function () {
+            $('.loading').addClass('leave');
+
+            setTimeout(function () {
+                $('.loading').addClass('leaved');
+            }, 2600);
+        }, 1800);
+    }, 2000);
 
     // debug
-    //  loading
-    $('.loading').addClass('finished');
-
-    // init app
-    app.start();
-    console.log('app started success...');
-
-    $('.loading').addClass('leave');
-
-    $('.loading').addClass('leaved');
+    ////  loading
+    //$('.loading').addClass('finished');
+    //
+    //// init app
+    //app.start();
+    //console.log('app started success...');
+    //
+    //$('.loading').addClass('leave');
+    //
+    //$('.loading').addClass('leaved');
 });
 
 //  take picture
