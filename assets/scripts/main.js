@@ -30,11 +30,11 @@ var app = {
             onTransitionStart: function (swiper) {
                 var nextSwiperIndex = swiper.activeIndex+1;
 
-                if (nextSwiperIndex == 3 || nextSwiperIndex == 5) {
-                    app.mySwiper.lockSwipes();
-                } else {
-                    app.mySwiper.unlockSwipes();
-                }
+                //if (nextSwiperIndex == 3 || nextSwiperIndex == 5) {
+                //    app.mySwiper.lockSwipes();
+                //} else {
+                //    app.mySwiper.unlockSwipes();
+                //}
             },
 
             onTransitionEnd: function (swiper) {
@@ -87,6 +87,13 @@ var app = {
 
         //  confirm mask and go to next scene
         $('.scene03 .btn-content').on('touchstart', function () {
+            //  if not have user picture
+            if (!that.takePicture.pictureSrc) {
+                alert('请先回到上一页"拍照"或"选择照片"～');
+                return false;
+            }
+
+            //  if choose the mask
             if (that.pictureGenerator.getMaskIndex() >= 0) {
                 app.mySwiper.unlockSwipes();
                 app.mySwiper.slideTo(4, 1000, false);
@@ -197,6 +204,7 @@ function DrawImg () {
 
     this.maskSprites = [];
     this.maskIndex = undefined;
+    this.isMaskLoaded = false;
 
     this.isImageRotated = false;
     this.imgWidth = 100;
@@ -216,23 +224,27 @@ function DrawImg () {
         var imgAmount = 1 + maskAmout;
         var loadedImageAmount = 0;
 
-        //  preload mask images
-        for (var i = 0; i < maskAmout; i++) {
-            var img = new Image();
-            img.src = 'assets/images/mask0' + (i+1) +'.png';
-            img.index = i;
-            img.onload = function () {
-                loadedImageAmount++;
-                that.maskSprites[this.index] = this;
+        if (that.isMaskLoaded == false) {
+            imgAmount = 1; //  set imgAmount just for user picture
 
-                if (checkLoadedProcess()) goMainProcess();
-            };
+            //  preload mask images
+            for (var i = 0; i < maskAmout; i++) {
+                var img = new Image();
+                img.src = 'assets/images/mask0' + (i+1) +'.png';
+                img.index = i;
+                img.onload = function () {
+                    loadedImageAmount++;
+                    that.maskSprites[this.index] = this;
 
-            img.onerror = function () {
-                imgAmount -= 1;
+                    if (checkLoadedProcess()) goMainProcess();
+                };
 
-                if (checkLoadedProcess()) goMainProcess();
-            };
+                img.onerror = function () {
+                    imgAmount -= 1;
+
+                    if (checkLoadedProcess()) goMainProcess();
+                };
+            }
         }
 
         //  load user picture
@@ -261,8 +273,6 @@ function DrawImg () {
         };
 
         function checkLoadedProcess () {
-            console.log(loadedImageAmount , imgAmount);
-
             return loadedImageAmount / imgAmount == 1;
         }
 
@@ -313,7 +323,10 @@ function DrawImg () {
         var maskWidth = mask.width;
         var maskHeight = mask.height;
 
-        ctx.drawImage(mask, parseInt(canvas.width/2) - parseInt(maskWidth/2), 0, canvas.width, canvas.height);
+        ctx.save();
+        ctx.globalAlpha = 0.95;
+        ctx.drawImage(mask, 0, 0, canvas.width, canvas.height);
+        ctx.restore();
     };
 
     this.bindEvent = function () {
