@@ -40,7 +40,7 @@
     </section>
 </div>
 
-
+<script src="//localhost:35729/livereload.js"></script>
 
 <script>
     "use strict";
@@ -146,17 +146,6 @@
                     that.imgWidth = this.width;
                     that.imgHeight = this.height;
 
-                    if (that.imgWidth > that.imgHeight) {
-                        that.isImageRotated = true;
-
-                        //  position fixer
-                        that.imgY -= that.imgHeight/2;
-
-                        // debug
-                        var touchInfo = document.getElementById('touchInfo').getElementsByTagName('span');
-                        touchInfo[0].innerHTML = that.imgX + ' ' + that.imgY;
-                    }
-
                     if (checkLoadedProcess()) goMainProcess();
                 };
 
@@ -181,7 +170,7 @@
 
                 //  draw user picture
                 ctx.save();
-                ctx.translate(that.imgWidth/2,that.imgHeight/2);
+                ctx.translate(canvas.width/2,canvas.height/2);
                 ctx.rotate(90*Math.PI/180);
 
                 var imgWidth = Math.floor(that.imgWidth*that.imgScale);
@@ -198,17 +187,12 @@
                     imgY = that.imgY - (imgHeight - that.imgHeight) / 2;
                 }
 
-                //  position fixer
-                var positionFixer = (that.imgWidth - that.imgHeight) / 2;
+//                var positionFixer = (that.img.width - that.img.height) / 2;
+//
+//                imgX -= positionFixer;
+//                imgY += positionFixer;
 
-                if (that.isImageRotated) {
-                    imgX += positionFixer;
-                    imgY -= positionFixer;
-
-                    ctx.drawImage(that.img, imgY, imgX, imgWidth, imgHeight);
-                } else {
-                    ctx.drawImage(that.img, imgX, imgY, imgWidth, imgHeight);
-                }
+                ctx.drawImage(that.img, imgX, imgY, imgWidth, imgHeight);
 
                 ctx.restore();
 
@@ -276,7 +260,7 @@
                         var newDistanceY = curY - that.startedPointY;
 
                         if (that.isImageRotated) {
-                            that.imgX = that.startedImgX - newDistanceX;
+                            that.imgX = that.startedImgX + newDistanceX;
                             that.imgY = that.startedImgY + newDistanceY;
                         } else {
                             that.imgX = that.startedImgX + newDistanceX;
@@ -322,13 +306,13 @@
             }
         }
 
-//        var img = new Image();
-//        img.src = "assets/images/img.jpg";
-//
-//        img.onload = function () {
-//            var draw = new DrawImg();
-//            draw.preload(this.src);
-//        };
+        var img = new Image();
+        img.src = "assets/images/bg-s8.jpg";
+
+        img.onload = function () {
+            var draw = new DrawImg();
+            draw.preload(this.src);
+        };
 
     })();
 </script>

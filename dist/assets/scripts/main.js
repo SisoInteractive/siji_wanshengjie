@@ -196,7 +196,7 @@ function DrawImg () {
     console.log(this.boxBoundingY);
 
     this.maskSprites = [];
-    this.maskIndex = 0;
+    this.maskIndex = undefined;
 
     this.isImageRotated = false;
     this.imgWidth = 100;
@@ -212,14 +212,14 @@ function DrawImg () {
     this.moveLockedTimer = null;
 
     this.preload = function (imgSrc) {
-        var maskAmout = 1;
+        var maskAmout = 9;
         var imgAmount = 1 + maskAmout;
         var loadedImageAmount = 0;
 
         //  preload mask images
         for (var i = 0; i < maskAmout; i++) {
             var img = new Image();
-            img.src = 'assets/images/mask01.png';
+            img.src = 'assets/images/mask0' + (i+1) +'.png';
             img.index = i;
             img.onload = function () {
                 loadedImageAmount++;
@@ -245,6 +245,14 @@ function DrawImg () {
             that.imgWidth = this.width;
             that.imgHeight = this.height;
 
+            if (that.imgWidth > that.imgHeight && that.imgWidth / that.imgHeight >= 1.2 && that.imgWidth >= 640) {
+                that.isImageRotated = true;
+
+                //  position fixer
+                that.imgX = -canvas.width/2;
+                that.imgY = -canvas.height/2;
+            }
+
             if (checkLoadedProcess()) goMainProcess();
         };
 
@@ -259,7 +267,6 @@ function DrawImg () {
         }
 
         function goMainProcess () {
-            that.draw(this);
             that.bindEvent();
         }
     };
@@ -268,10 +275,6 @@ function DrawImg () {
         ctx.clearRect(0, 0, clientWidth, clientHeight);
 
         //  draw user picture
-//                ctx.save();
-//                ctx.translate(canvas.width/2,canvas.height/2);
-//                ctx.rotate(90*Math.PI/180);
-
         var imgWidth = Math.floor(that.imgWidth*that.imgScale);
         var imgHeight = Math.floor(that.imgHeight*that.imgScale);
 
@@ -286,17 +289,31 @@ function DrawImg () {
             imgY = that.imgY - (imgHeight - that.imgHeight) / 2;
         }
 
-        ctx.drawImage(that.img, imgX, imgY, imgWidth, imgHeight);
+        //  position fixer
+        var positionFixer = (that.imgWidth - that.imgHeight) / 2;
 
-        //  restore ctx setting
-//                ctx.restore();
+        if (that.isImageRotated) {
+            ctx.save();
+            ctx.translate(that.imgWidth/2,that.imgHeight/2);
+            ctx.rotate(90*Math.PI/180);
+
+            imgX += positionFixer;
+            imgY -= positionFixer;
+
+            ctx.drawImage(that.img, imgY, imgX, imgWidth, imgHeight);
+
+            //  restore ctx setting
+            ctx.restore();
+        } else {
+            ctx.drawImage(that.img, imgX, imgY, imgWidth, imgHeight);
+        }
 
         // draw mask
-        var mask = that.maskSprites[that.maskIndex];
-        var maskWidth = parseInt(mask.width/2);
-        var maskHeight = parseInt(mask.height/2);
+        var mask = that.maskSprites[that.getMaskIndex()];
+        var maskWidth = mask.width;
+        var maskHeight = mask.height;
 
-        ctx.drawImage(mask, parseInt(canvas.width/2) - parseInt(maskWidth/2), 0, maskWidth, maskHeight);
+        ctx.drawImage(mask, parseInt(canvas.width/2) - parseInt(maskWidth/2), 0, canvas.width, canvas.height);
     };
 
     this.bindEvent = function () {
@@ -352,7 +369,7 @@ function DrawImg () {
                 var newDistanceY = curY - that.startedPointY;
 
                 if (that.isImageRotated) {
-                    that.imgX = that.startedImgX + newDistanceX;
+                    that.imgX = that.startedImgX - newDistanceX;
                     that.imgY = that.startedImgY + newDistanceY;
                 } else {
                     that.imgX = that.startedImgX + newDistanceX;
@@ -370,27 +387,17 @@ function DrawImg () {
                 var newDistanceBetweenTwoPointsY = Math.abs(curY - curY2);
                 var getMaxValue = Math.max(newDistanceBetweenTwoPointsX, newDistanceBetweenTwoPointsY);
 
-                var statue,
-                    newScale;
+                var newScale;
 
                 if (that.maxDistanceBetweenTwoPoints < getMaxValue) {
-                    statue = '放大';
                     newScale = that.oldImgScale + parseFloat(((getMaxValue - that.maxDistanceBetweenTwoPoints) / 200).toFixed(2));
 
                     if (newScale >= 0.1) that.imgScale = newScale;
                 } else {
-                    statue = '缩小';
                     newScale = that.oldImgScale - parseFloat(((that.maxDistanceBetweenTwoPoints - getMaxValue) / 200).toFixed(2));
 
                     if (newScale >= 0.1) that.imgScale = newScale;
                 }
-
-                // debug
-                var touchInfo = document.getElementById('touchInfo').getElementsByTagName('span');
-                touchInfo[0].innerHTML = 2;
-                touchInfo[1].innerHTML = touches[0].pageX - that.boxBoundingX;
-                touchInfo[2].innerHTML = touches[1].pageX - that.boxBoundingX;
-                touchInfo[3].innerHTML = statue + ': scale ' + that.imgScale;
             }
 
             that.draw();
@@ -402,6 +409,6 @@ function DrawImg () {
     };
 
     this.getMaskIndex = function () {
-        return that.maskIndex || false;
+        return that.maskIndex;
     };
 }

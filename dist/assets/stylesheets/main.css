@@ -395,7 +395,7 @@ input {
   height: 1.30666667rem;
   border: none;
   background: url("../images/s3-btn.png") no-repeat;
-  background-size: 4.44rem 1.30666667;
+  background-size: 4.44rem 1.30666667rem;
 }
 .scene03-before .btn .btn-content input {
   opacity: 0;
@@ -498,7 +498,7 @@ input {
   height: 1.30666667rem;
   border: none;
   background: url("../images/s3-btn.png") no-repeat;
-  background-size: 4.44rem 1.30666667;
+  background-size: 4.44rem 1.30666667rem;
 }
 .scene03 .btn .btn-content input {
   opacity: 0;
@@ -532,6 +532,35 @@ input {
   opacity: 1;
   -webkit-transform: translate3d(0, 0, 0);
           transform: translate3d(0, 0, 0);
+}
+/* scene 08 */
+.scene08 {
+  background: url("../images/bg-s8.jpg") no-repeat;
+  background-size: cover;
+}
+.scene08 .pa {
+  opacity: 0;
+}
+.scene08 .title {
+  top: 7.86666667rem;
+  -webkit-transition: all 3s;
+          transition: all 3s;
+}
+.scene08 .title img {
+  width: 4.18666667rem;
+}
+.scene08 .para {
+  top: 9.62666667rem;
+  left: 2.33333333rem;
+  width: 6.24rem;
+  -webkit-transition: all 3s;
+          transition: all 3s;
+}
+.scene08.active .title {
+  opacity: 1;
+}
+.scene08.active .para {
+  opacity: 1;
 }
 /*======================================================================
       Responsive

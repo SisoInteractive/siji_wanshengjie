@@ -120,7 +120,7 @@
                 //  preload mask images
                 for (var i = 0; i < maskAmout; i++) {
                     var img = new Image();
-                    img.src = 'assets/images/mask1.png';
+                    img.src = 'assets/images/mask01.png';
                     img.index = i;
                     img.onload = function () {
                         loadedImageAmount++;
@@ -146,6 +146,17 @@
                     that.imgWidth = this.width;
                     that.imgHeight = this.height;
 
+                    if (that.imgWidth > that.imgHeight) {
+                        that.isImageRotated = true;
+
+                        //  position fixer
+                        that.imgY -= that.imgHeight/2;
+
+                        // debug
+                        var touchInfo = document.getElementById('touchInfo').getElementsByTagName('span');
+                        touchInfo[0].innerHTML = that.imgX + ' ' + that.imgY;
+                    }
+
                     if (checkLoadedProcess()) goMainProcess();
                 };
 
@@ -160,7 +171,7 @@
                 }
 
                 function goMainProcess () {
-                    that.draw(this);
+                    that.draw();
                     that.bindEvent();
                 }
             };
@@ -169,15 +180,15 @@
                 ctx.clearRect(0, 0, clientWidth, clientHeight);
 
                 //  draw user picture
-//                ctx.save();
-//                ctx.translate(canvas.width/2,canvas.height/2);
-//                ctx.rotate(90*Math.PI/180);
+                ctx.save();
+                ctx.translate(that.imgWidth/2,that.imgHeight/2);
+                ctx.rotate(90*Math.PI/180);
 
                 var imgWidth = Math.floor(that.imgWidth*that.imgScale);
                 var imgHeight = Math.floor(that.imgHeight*that.imgScale);
 
                 var imgX,
-                        imgY;
+                    imgY;
 
                 if (that.imgScale < that.oldImgScale) {
                     imgX = that.imgX + (that.imgWidth - imgWidth)/2;
@@ -187,7 +198,19 @@
                     imgY = that.imgY - (imgHeight - that.imgHeight) / 2;
                 }
 
-                ctx.drawImage(that.img, imgX, imgY, imgWidth, imgHeight);
+                //  position fixer
+                var positionFixer = (that.imgWidth - that.imgHeight) / 2;
+
+                if (that.isImageRotated) {
+                    imgX += positionFixer;
+                    imgY -= positionFixer;
+
+                    ctx.drawImage(that.img, imgY, imgX, imgWidth, imgHeight);
+                } else {
+                    ctx.drawImage(that.img, imgX, imgY, imgWidth, imgHeight);
+                }
+
+                ctx.restore();
 
                 //  restore ctx setting
 //                ctx.restore();
@@ -253,7 +276,7 @@
                         var newDistanceY = curY - that.startedPointY;
 
                         if (that.isImageRotated) {
-                            that.imgX = that.startedImgX + newDistanceX;
+                            that.imgX = that.startedImgX - newDistanceX;
                             that.imgY = that.startedImgY + newDistanceY;
                         } else {
                             that.imgX = that.startedImgX + newDistanceX;
@@ -300,7 +323,7 @@
         }
 
 //        var img = new Image();
-//        img.src = "assets/images/sam.jpg";
+//        img.src = "assets/images/img.jpg";
 //
 //        img.onload = function () {
 //            var draw = new DrawImg();

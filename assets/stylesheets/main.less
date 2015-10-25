@@ -469,7 +469,7 @@ input {
       .calHeight(98);
       border: none;
       background: url("../images/s3-btn.png") no-repeat;
-      background-size: 333rem/@page-base-rem 98/@page-base-rem;
+      background-size: 333rem/@page-base-rem 98rem/@page-base-rem;
 
       input {
         opacity: 0;
@@ -583,7 +583,7 @@ input {
       .calHeight(98);
       border: none;
       background: url("../images/s3-btn.png") no-repeat;
-      background-size: 333rem/@page-base-rem 98/@page-base-rem;
+      background-size: 333rem/@page-base-rem 98rem/@page-base-rem;
 
       input {
         opacity: 0;
@@ -624,6 +624,40 @@ input {
   .nangua {
     opacity: 1;
     transform: translate3d(0, 0, 0);
+  }
+}
+
+/* scene 08 */
+.scene08 {
+  background: url("../images/bg-s8.jpg") no-repeat;
+  background-size: cover;
+
+  .pa { opacity: 0; }
+
+  .title {
+    .calTop(590);
+    transition: all 3s;
+
+    img {
+      .calWidth(314);
+    }
+  }
+
+  .para {
+    .calTop(722);
+    .calLeft(175);
+    .calWidth(468);
+    transition: all 3s;
+  }
+}
+
+.scene08.active {
+  .title {
+    opacity: 1;
+  }
+
+  .para {
+    opacity: 1;
   }
 }
 
