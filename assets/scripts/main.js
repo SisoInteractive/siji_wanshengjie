@@ -8,6 +8,81 @@ document.addEventListener('touchmove', function (e) {
 },true);
 
 var app = {
+    preload: function () {
+        var that = this;
+
+        //  set images generator
+        var imgPath = "assets/images/";
+        var imageSrcArr = [
+            'bg-s2.jpg',
+            'bg-s3-before.jpg',
+            'bg-s3.png',
+            'bg-s6.jpg',
+            'bg-s8.jpg',
+            'bg-sa.png',
+            's1-nangua.png',
+            's1-title.png',
+            's1-title02.png',
+            's2-content.png',
+            's3-before-nangua.png',
+            'sa-content.png',
+            'sprites-mask.png'
+        ];
+        //  img amounts, use the amounts order to general image objects
+        var imgAmounts = imageSrcArr.length;
+        var loadedAmounts = 0;
+        var isLoaded = false;
+
+        //  load imgs
+        for (var i = 0; i < imageSrcArr.length; i++) {
+            var img = new Image();
+            img.src = imgPath + imageSrcArr[i];
+            img.onload = function () {
+                loadedAmounts++;
+
+                /* check img load progress */
+                if (checkIsAllMainImagesLoaded() && isLoaded == false) {
+                    goCreatingProcess();
+                }
+            };
+
+            img.onerror = function (error) {
+                imgAmounts -= 1;
+
+                /* check img load progress */
+                if (checkIsAllMainImagesLoaded() && isLoaded == false) {
+                    goCreatingProcess();
+                }
+            };
+        }
+
+
+        function goCreatingProcess () {
+            isLoaded = true;
+            $('.loading').addClass('finished');
+
+            // init app
+            app.start();
+            console.log('app started success...');
+
+            setTimeout(function () {
+                $('.loading').addClass('leave');
+
+                setTimeout(function () {
+                    $('.loading').addClass('leaved');
+                }, 2600);
+            }, 1800);
+        }
+
+        function checkIsAllMainImagesLoaded () {
+            if (isLoaded == false) {
+                var loadedRate = 0.9;
+
+                return loadedAmounts / imgAmounts >= loadedRate;
+            }
+        }
+    },
+
     create: function (){
         var that = this;
 
@@ -63,15 +138,10 @@ var app = {
 
         //  invoke when get user picture.
         function chooseImageCallBack () {
-            app.mySwiper.unlockSwipes();
             app.mySwiper.slideTo(3, 1000, false);
 
             //  preload user picture
             that.pictureGenerator.preload(that.takePicture.pictureSrc);
-
-            setTimeout(function () {
-                app.mySwiper.lockSwipes();
-            }, 950);
         }
 
         //  choose mask when click mask
@@ -115,36 +185,11 @@ var app = {
     }
 };
 
-$(function (){
-    //  loading
-    setTimeout(function () {
-        $('.loading').addClass('finished');
-
-        // init app
-        app.start();
-        console.log('app started success...');
-
-        setTimeout(function () {
-            $('.loading').addClass('leave');
-
-            setTimeout(function () {
-                $('.loading').addClass('leaved');
-            }, 2600);
-        }, 1800);
-    }, 2000);
-
-    // debug
-    ////  loading
-    //$('.loading').addClass('finished');
-    //
-    //// init app
-    //app.start();
-    //console.log('app started success...');
-    //
-    //$('.loading').addClass('leave');
-    //
-    //$('.loading').addClass('leaved');
-});
+//  init app
+(function init () {
+    console.log('go preload..');
+    app.preload();
+})();
 
 //  take picture
 function TakePicture (takePictureBtn, takePictureSuccessdCallback) {

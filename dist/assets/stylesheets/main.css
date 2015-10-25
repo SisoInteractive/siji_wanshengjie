@@ -48,7 +48,6 @@ input {
   display: block;
   min-width: 320px;
   margin: 0 auto;
-  max-width: 1080px;
 }
 /* swiper */
 .swiper-container {
@@ -322,57 +321,12 @@ input {
 .scene02 .pa {
   opacity: 0;
 }
-.scene02 .title {
-  top: 0.49333333rem;
+.scene02 .para {
+  top: 0.68rem;
   -webkit-transition: opacity 3s;
           transition: opacity 3s;
 }
-.scene02 .title img {
-  width: 7.94666667rem;
-}
-.scene02 .hero01 {
-  top: 7.2rem;
-  left: 1.82666667rem;
-  width: 0.97333333rem;
-  height: 1rem;
-}
-.scene02 .hero02 {
-  top: 7.34666667rem;
-  left: 2.6rem;
-  width: 2.04rem;
-}
-.scene02 .hero03 {
-  top: 6.41333333rem;
-  left: 4.09333333rem;
-  width: 2.13333333rem;
-}
-.scene02 .hero04 {
-  top: 6.58666667rem;
-  left: 6.42666667rem;
-  width: 1.14666667rem;
-}
-.scene02 .title02 {
-  top: 10.52rem;
-  -webkit-transition: opacity 3s;
-          transition: opacity 3s;
-}
-.scene02 .title02 img {
-  width: 8.46666667rem;
-}
-.scene02.active .hero01 {
-  -webkit-animation: zoomIn .3s ease .2s 1 forwards;
-}
-.scene02.active .hero02 {
-  -webkit-animation: zoomIn .3s ease 0s 1 forwards;
-}
-.scene02.active .hero03 {
-  -webkit-animation: zoomIn .3s ease 0s 1 forwards;
-}
-.scene02.active .hero04 {
-  -webkit-animation: zoomIn .3s ease .2s 1 forwards;
-}
-.scene02.active .title,
-.scene02.active .title02 {
+.scene02.active .para {
   opacity: 1;
 }
 /* scene 03 before */
@@ -430,7 +384,7 @@ input {
   background-size: 1.6rem 0.8rem;
 }
 .scene03 .mask.active {
-  -webkit-animation: bounceIn 1.2s ease 1 forwards;
+  -webkit-animation: bounceIn .6s ease 1 forwards;
 }
 .scene03 .mask.active .icon {
   background-position: -0.81333333rem 0;

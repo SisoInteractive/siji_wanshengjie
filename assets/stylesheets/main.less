@@ -75,7 +75,6 @@ input {
   display: block;
   min-width: 320px;
   margin: 0 auto;
-  max-width: 1080px;
 }
 
 /* swiper */
@@ -380,69 +379,14 @@ input {
 
   .pa { opacity: 0;}
 
-  .title {
-    .calTop(37);
+  .para {
+    .calTop(51);
     transition: opacity 3s;
-
-    img {
-      .calWidth(596);
-    }
-  }
-
-  .hero01 {
-    .calTop(540);
-    .calLeft(137);
-    .calWidth(73);
-    .calHeight(75);
-  }
-
-  .hero02 {
-    .calTop(551);
-    .calLeft(195);
-    .calWidth(153);
-  }
-
-  .hero03 {
-    .calTop(481);
-    .calLeft(307);
-    .calWidth(160);
-  }
-
-  .hero04 {
-    .calTop(494);
-    .calLeft(482);
-    .calWidth(86);
-  }
-
-  .title02 {
-    .calTop(789);
-    transition: opacity 3s;
-
-    img {
-      .calWidth(635);
-    }
   }
 }
 
 .scene02.active {
-  .hero01 {
-     -webkit-animation: zoomIn .3s ease .2s 1 forwards;
-  }
-
-  .hero02 {
-    -webkit-animation: zoomIn .3s ease 0s 1 forwards;
-  }
-
-  .hero03 {
-    -webkit-animation: zoomIn .3s ease 0s 1 forwards;
-  }
-
-  .hero04 {
-    -webkit-animation: zoomIn .3s ease .2s 1 forwards;
-  }
-
-  .title,
-  .title02 {
+  .para {
     opacity: 1;
   }
 }
@@ -514,7 +458,7 @@ input {
   }
 
   .mask.active {
-    -webkit-animation: bounceIn 1.2s ease 1 forwards;
+    -webkit-animation: bounceIn .6s ease 1 forwards;
 
     .icon {
       background-position: -61rem/@page-base-rem 0;
