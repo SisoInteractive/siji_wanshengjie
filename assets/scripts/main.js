@@ -200,7 +200,6 @@ function DrawImg () {
 
     this.boxBoundingX = parseInt(canvas.getBoundingClientRect().left);
     this.boxBoundingY = parseInt(canvas.getBoundingClientRect().top);
-    console.log(this.boxBoundingY);
 
     this.maskSprites = [];
     this.maskIndex = undefined;
@@ -257,7 +256,7 @@ function DrawImg () {
             that.imgWidth = this.width;
             that.imgHeight = this.height;
 
-            if (that.imgWidth > that.imgHeight && that.imgWidth / that.imgHeight >= 1.2 && that.imgWidth >= 640) {
+            if (that.imgWidth > that.imgHeight && that.imgWidth / that.imgHeight >= 1.2) {
                 that.isImageRotated = true;
 
                 //  position fixer
