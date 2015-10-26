@@ -138,13 +138,10 @@ var app = {
 
         //  generate picture generator
         this.pictureGenerator = new DrawImg();
-
-        var oldUserPicture = null;
+        that.pictureGenerator.preload(that.takePicture.pictureSrc);
 
         //  invoke when get user picture.
         function chooseImageCallBack () {
-            oldUserPicture = that.takePicture.pictureSrc;
-
             app.mySwiper.unlockSwipes();
             app.mySwiper.slideTo(3, 1000, false);
 
@@ -163,6 +160,10 @@ var app = {
 
         $('.scene03 .mask').each(function (index) {
             $(this).on('click', function () {
+                //  remark picture generator;
+                isFinishedGame = false;
+                that.isFinishedPicture = false;
+
                 $('.mask').eq(index).addClass('active')
                     .siblings('.mask').removeClass('active');
 
@@ -178,8 +179,13 @@ var app = {
 
         //  restart game
         $('.scene04 .restart').on('click', function () {
+            //  remark picture generator;
             isFinishedGame = false;
-            that.isFinishedPicture = false;
+            that.pictureGenerator.isFinishedPicture = false;
+
+            $('.scene04 .float').hide();
+            $('.scene04 .restart, .scene04 .confirm').show();
+
             app.mySwiper.unlockSwipes();
             app.mySwiper.slideTo(2, 1000, false);
 
@@ -221,7 +227,7 @@ var app = {
 
         //  lazyload big picture
         setTimeout(function () {
-            $('.scene-activity').css({'backgroundImage': 'url("assets/images/bg-sa.png")'});
+            $('.scene-activity').css({'backgroundImage': 'url("assets/images/bg-sa.jpg")'});
             $('.scene06').css({'backgroundImage': 'url("assets/images/bg-s6.jpg")'});
             $('.scene08').css({'backgroundImage': 'url("assets/images/bg-s8.jpg")'});
         }, 6000);
@@ -345,26 +351,28 @@ function DrawImg () {
         this.img = new Image();
         this.img.src = imgSrc;
 
-        this.img.onload = function () {
-            loadedImageAmount++;
+        if (imgSrc) {
+            this.img.onload = function () {
+                loadedImageAmount++;
 
-            that.imgWidth = this.width;
-            that.imgHeight = this.height;
+                that.imgWidth = this.width;
+                that.imgHeight = this.height;
 
-            if (that.imgWidth > that.imgHeight && that.imgWidth / that.imgHeight >= 1.2) {
-                that.isImageRotated = true;
+                if (that.imgWidth > that.imgHeight && that.imgWidth / that.imgHeight >= 1.333) {
+                    that.isImageRotated = true;
 
-                //  position fixer
-                that.imgX = -canvas.width/2;
-                that.imgY = -canvas.height/2;
-            }
+                    //  position fixer
+                    that.imgX = -canvas.width/2;
+                    that.imgY = -canvas.height/2;
+                }
 
-            if (checkLoadedProcess()) goMainProcess();
-        };
+                if (checkLoadedProcess()) goMainProcess();
+            };
 
-        this.img.onerror = function () {
-            alert('图片加载失败, 请重新选择图片~');
-        };
+            this.img.onerror = function () {
+                alert('图片加载失败, 请重新选择图片~');
+            };
+        }
 
         function checkLoadedProcess () {
             return loadedImageAmount / imgAmount == 1;

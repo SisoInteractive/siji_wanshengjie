@@ -557,21 +557,15 @@ input {
 .scene-activity .pa {
   opacity: 0;
 }
-.scene-activity .nangua {
-  top: 1rem;
+.scene-activity .para {
+  top: 3.64rem;
   right: 0rem;
-  -webkit-transform: translate3d(100%, 0, 0);
-          transform: translate3d(100%, 0, 0);
+  width: 10rem;
   -webkit-transition: all 1.2s;
           transition: all 1.2s;
 }
-.scene-activity .nangua img {
-  width: 2.8rem;
-}
-.scene-activity.active .nangua {
+.scene-activity.active .para {
   opacity: 1;
-  -webkit-transform: translate3d(0, 0, 0);
-          transform: translate3d(0, 0, 0);
 }
 /* scene 08 */
 .scene08 {
