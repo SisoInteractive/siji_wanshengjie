@@ -15,18 +15,10 @@ var app = {
         var imgPath = "assets/images/";
         var imageSrcArr = [
             'bg-s2.jpg',
-            'bg-s3-before.jpg',
-            'bg-s3.png',
-            'bg-s6.jpg',
-            'bg-s8.jpg',
-            'bg-sa.png',
             's1-nangua.png',
             's1-title.png',
             's1-title02.png',
-            's2-content.png',
-            's3-before-nangua.png',
-            'sa-content.png',
-            'sprites-mask.png'
+            's2-content.png'
         ];
         //  img amounts, use the amounts order to general image objects
         var imgAmounts = imageSrcArr.length;
@@ -88,6 +80,9 @@ var app = {
 
         that.maskIndex = null;
 
+        var isMaskTipsShown = false;
+        var isFinishedGame = false;
+
         app.mySwiper = new Swiper ('.swiper-container', {
             direction: 'vertical',
 
@@ -103,18 +98,26 @@ var app = {
             },
 
             onTransitionStart: function (swiper) {
-                var nextSwiperIndex = swiper.activeIndex+1;
-
-                //if (nextSwiperIndex == 3 || nextSwiperIndex == 5) {
-                //    app.mySwiper.lockSwipes();
-                //} else {
-                //    app.mySwiper.unlockSwipes();
-                //}
             },
 
             onTransitionEnd: function (swiper) {
                 $('.scene').removeClass('active')
                     .eq(swiper.activeIndex).addClass('active');
+
+                var nextSwiperIndex = swiper.activeIndex+1;
+
+                if (nextSwiperIndex == 3 && isMaskTipsShown == false) {
+                    $('.mask-tips').fadeIn();
+                }
+
+                if (nextSwiperIndex == 3 || nextSwiperIndex == 4 && isFinishedGame == false) {
+                    app.mySwiper.lockSwipes();
+                }
+
+                //  if game finished, hide generator picture tools
+                if (isFinishedGame == true) {
+                    $('.scene04 .float, .scene04 .restart, .scene04 .confirm').hide();
+                }
             }
         });
 
@@ -130,54 +133,98 @@ var app = {
 
         /** main picture app */
         //  generate take picture app
-        var takePictureBtn = $('.scene03-before .btn-content')[0];
+        var takePictureBtn = $('#take-picture')[0];
         this.takePicture = new TakePicture(takePictureBtn, chooseImageCallBack);
 
         //  generate picture generator
         this.pictureGenerator = new DrawImg();
 
+        var oldUserPicture = null;
+
         //  invoke when get user picture.
         function chooseImageCallBack () {
+            oldUserPicture = that.takePicture.pictureSrc;
+
+            app.mySwiper.unlockSwipes();
             app.mySwiper.slideTo(3, 1000, false);
+
+            setTimeout(function () {
+                app.mySwiper.lockSwipes();
+            }, 100);
 
             //  preload user picture
             that.pictureGenerator.preload(that.takePicture.pictureSrc);
         }
 
         //  choose mask when click mask
+        $('.mask-tips .close').click(function () {
+            $('.mask-tips').hide();
+        });
+
         $('.scene03 .mask').each(function (index) {
-            $(this).on('touchstart', function () {
+            $(this).on('click', function () {
                 $('.mask').eq(index).addClass('active')
                     .siblings('.mask').removeClass('active');
 
+                $('#take-picture').val('').trigger('click');
+
                 //  set choose mask index
                 that.pictureGenerator.setMaskIndex(index);
+
+                //  show generator tools
+                $('.scene04 .restart, .scene04 .confirm').show();
             });
         });
 
-        //  confirm mask and go to next scene
-        $('.scene03 .btn-content').on('touchstart', function () {
-            //  if not have user picture
-            if (!that.takePicture.pictureSrc) {
-                alert('请先回到上一页"拍照"或"选择照片"～');
-                return false;
-            }
+        //  restart game
+        $('.scene04 .restart').on('click', function () {
+            isFinishedGame = false;
+            that.isFinishedPicture = false;
+            app.mySwiper.unlockSwipes();
+            app.mySwiper.slideTo(2, 1000, false);
 
-            //  if choose the mask
-            if (that.pictureGenerator.getMaskIndex() >= 0) {
-                app.mySwiper.unlockSwipes();
-                app.mySwiper.slideTo(4, 1000, false);
+            setTimeout(function () {
+                app.mySwiper.lockSwipes();
+            }, 100);
+        });
 
-                that.pictureGenerator.draw();
+        //  finished game, generate final picture,
+        //  unlock swipers
+        var finalPicture = null;
 
-                setTimeout(function () {
-                    app.mySwiper.lockSwipes();
-                }, 950);
+        $('.scene04 .confirm').on('click', function () {
+            isFinishedGame = true;
+
+            app.mySwiper.unlockSwipes();
+
+            //  general final picture
+            finalPicture = app.pictureGenerator.generalFinalPicture();
+            console.log(finalPicture);
+
+            // open float window
+            $('.scene04 .float').fadeIn();
+        });
+
+        //  float window button's event
+        $('.scene04 .float .save').on('click', function () {
+            alert('请使用手机截屏功能保存您的装扮～');
+        });
+
+        //  微信分享
+        $('.scene04 .float .forward').on('click', function () {
+            if (finalPicture) {
+                //  code here...
             } else {
-                alert('请选择想要使用的面具~');
-                return false;
+                alert('您还未生成您的照片,请前往选择面具页面进行打扮~');
             }
         });
+
+        //  lazyload big picture
+        setTimeout(function () {
+            $('.scene-activity').css({'backgroundImage': 'url("assets/images/bg-sa.png")'});
+            $('.scene06').css({'backgroundImage': 'url("assets/images/bg-s6.jpg")'});
+            $('.scene08').css({'backgroundImage': 'url("assets/images/bg-s8.jpg")'});
+        }, 6000);
     },
 
     start: function (){
@@ -263,15 +310,18 @@ function DrawImg () {
     this.moveLocked = false;
     this.moveLockedTimer = null;
 
+    this.isFinishedPicture = false;
+
     this.preload = function (imgSrc) {
         var maskAmout = 9;
         var imgAmount = 1 + maskAmout;
         var loadedImageAmount = 0;
 
-        if (that.isMaskLoaded == false) {
+        //  preload mask images if mask have not be loaded.
+        if (that.isMaskLoaded == true) {
             imgAmount = 1; //  set imgAmount just for user picture
 
-            //  preload mask images
+        } else {
             for (var i = 0; i < maskAmout; i++) {
                 var img = new Image();
                 img.src = 'assets/images/mask0' + (i+1) +'.png';
@@ -283,7 +333,7 @@ function DrawImg () {
                     if (checkLoadedProcess()) goMainProcess();
                 };
 
-                img.onerror = function () {
+                img.onerror = function (e) {
                     imgAmount -= 1;
 
                     if (checkLoadedProcess()) goMainProcess();
@@ -321,7 +371,10 @@ function DrawImg () {
         }
 
         function goMainProcess () {
+            that.isMaskLoaded = true;
+
             that.bindEvent();
+            that.draw();
         }
     };
 
@@ -367,10 +420,24 @@ function DrawImg () {
         var maskWidth = mask.width;
         var maskHeight = mask.height;
 
-        ctx.save();
-        ctx.globalAlpha = 0.95;
-        ctx.drawImage(mask, 0, 0, canvas.width, canvas.height);
-        ctx.restore();
+        // if is not finished picture, make mask to be high opacity
+        if (that.isFinishedPicture == false) {
+            ctx.save();
+            ctx.globalAlpha = 0.95;
+            ctx.drawImage(mask, 0, 0, canvas.width, canvas.height);
+            ctx.restore();
+        } else {
+            ctx.drawImage(mask, 0, 0, canvas.width, canvas.height);
+        }
+    };
+
+    this.generalFinalPicture = function () {
+        that.isFinishedPicture = true;
+        that.draw();
+
+        var imageSource = canvas.toDataURL('image/jpeg', 0.7);
+
+        return imageSource;
     };
 
     this.bindEvent = function () {
@@ -383,7 +450,7 @@ function DrawImg () {
 
             clearTimeout(that.moveLockedTimer);
 
-            if (touches.length == 1) {
+            if (touches.length == 1 && that.isFinishedPicture == false) {
                 that.startedPointX = evt.touches[0].pageX - that.boxBoundingX;
                 that.startedPointY = evt.touches[0].pageY - that.boxBoundingY;
 
@@ -392,7 +459,7 @@ function DrawImg () {
 
             }
 
-            if (touches.length == 2) {
+            if (touches.length == 2 && that.isFinishedPicture == false) {
                 that.oldImgScale = that.imgScale;
                 that.moveLocked = true;
 
@@ -421,7 +488,7 @@ function DrawImg () {
             var curY = touches[0].pageY - that.boxBoundingY;
 
             //  move img when touches point is single
-            if (touches.length == 1 && that.moveLocked == false) {
+            if (touches.length == 1 && that.moveLocked == false && that.isFinishedPicture == false) {
                 var newDistanceX = curX - that.startedPointX;
                 var newDistanceY = curY - that.startedPointY;
 
@@ -435,7 +502,7 @@ function DrawImg () {
             }
 
             //  scale img when touches point is double
-            if (touches.length == 2) {
+            if (touches.length == 2 && that.isFinishedPicture == false) {
                 that.moveLocked = true;
                 var curX2 = touches[1].pageX - that.boxBoundingX;
                 var curY2 = touches[1].pageY - that.boxBoundingY;

@@ -15,7 +15,15 @@
     "grunt-contrib-less": "*",
     "grunt-contrib-watch": "*",
     "load-grunt-tasks": "*",
-    "grunt-autoprefixer": "*"
+    "grunt-autoprefixer": "*",
+    "body-parser": "*",
+    "consolidate": "*",
+    "cors": "^2.7.1",
+    "express": "*",
+    "mongodb": "*",
+    "multer": "^0.1.8",
+    "underscore": "*",
+    "socket.io": "*"
   },
   "devDependencies": {
     "grunt-string-replace": "^1.2.0"
