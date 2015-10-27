@@ -106,12 +106,14 @@ var app = {
 
                 var nextSwiperIndex = swiper.activeIndex+1;
 
-                if (nextSwiperIndex == 3 && isMaskTipsShown == false) {
+                if (nextSwiperIndex == 6 && isMaskTipsShown == false) {
                     $('.mask-tips').fadeIn();
                 }
 
-                if (nextSwiperIndex == 3 || nextSwiperIndex == 4 && isFinishedGame == false) {
-                    app.mySwiper.lockSwipes();
+                if (nextSwiperIndex == 6 || nextSwiperIndex == 7 && isFinishedGame == false) {
+                    app.mySwiper.lockSwipeToNext();
+                } else {
+                    app.mySwiper.unlockSwipes();
                 }
 
                 //  if game finished, hide generator picture tools
@@ -143,7 +145,7 @@ var app = {
         //  invoke when get user picture.
         function chooseImageCallBack () {
             app.mySwiper.unlockSwipes();
-            app.mySwiper.slideTo(3, 1000, false);
+            app.mySwiper.slideTo(7, 1000, false);
 
             setTimeout(function () {
                 app.mySwiper.lockSwipes();
@@ -187,7 +189,7 @@ var app = {
             $('.scene04 .restart, .scene04 .confirm').show();
 
             app.mySwiper.unlockSwipes();
-            app.mySwiper.slideTo(2, 1000, false);
+            app.mySwiper.slideTo(5, 1000, false);
 
             setTimeout(function () {
                 app.mySwiper.lockSwipes();
@@ -211,11 +213,6 @@ var app = {
             $('.scene04 .float').fadeIn();
         });
 
-        //  float window button's event
-        $('.scene04 .float .save').on('click', function () {
-            alert('请使用手机截屏功能保存您的装扮～');
-        });
-
         //  微信分享
         $('.scene04 .float .forward').on('click', function () {
             if (finalPicture) {
@@ -224,13 +221,6 @@ var app = {
                 alert('您还未生成您的照片,请前往选择面具页面进行打扮~');
             }
         });
-
-        //  lazyload big picture
-        setTimeout(function () {
-            $('.scene-activity').css({'backgroundImage': 'url("assets/images/bg-sa.jpg")'});
-            $('.scene06').css({'backgroundImage': 'url("assets/images/bg-s6.jpg")'});
-            $('.scene08').css({'backgroundImage': 'url("assets/images/bg-s8.jpg")'});
-        }, 6000);
     },
 
     start: function (){
@@ -358,7 +348,9 @@ function DrawImg () {
                 that.imgWidth = this.width;
                 that.imgHeight = this.height;
 
-                if (that.imgWidth > that.imgHeight && that.imgWidth / that.imgHeight >= 1.333) {
+                var isPictureSize = that.imgWidth / that.imgHeight >= 1.33 && that.imgHeight && that.imgWidth / that.imgHeight <= 1.4;
+
+                if (that.imgWidth > that.imgHeight && isPictureSize) {
                     that.isImageRotated = true;
 
                     //  position fixer
