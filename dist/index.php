@@ -1,3 +1,9 @@
+<?php
+require_once "../pingtan/jssdk.php";
+$jssdk = new JSSDK("wx33b1e3d02516f1dd", "cf33315a06dfa044fc7d56ee3e811900");
+$signPackage = $jssdk->GetSignPackage();
+?>
+
 <!DOCTYPE html>
 <html>
 <head lang="en">
@@ -132,7 +138,7 @@
         <!-- 生成面具 -->
         <div class="swiper-slide scene scene04">
             <canvas id="canvas"></canvas>
-            
+
             <!-- operator -->
             <div class="pa float">
                 <div class="pa save"></div>
@@ -168,5 +174,54 @@
 <!-- less compiler -->
 <script src="assets/scripts/less.min.js"></script>
 <!-- endinjector -->
+
+<script>
+    // 微信分享设置
+    wx.config({
+        debug: false,
+        appId: '<?php echo $signPackage["appId"];?>',
+        timestamp: <?php echo $signPackage["timestamp"];?>,
+        nonceStr: '<?php echo $signPackage["nonceStr"];?>',
+        signature: '<?php echo $signPackage["signature"];?>',
+        jsApiList: [
+          'onMenuShareAppMessage',
+          'onMenuShareTimeline'
+        ]
+    });
+
+    // config信息验证后会执行ready方法，所有接口调用都必须在config接口获得结果之后，config是一个客户端的异步操作，所以如果需要在页面加载时就调用相关接口，则须把相关接口放在ready函数中调用来确保正确执行。对于用户触发时才调用的接口，则可以直接调用，不需要放在ready函数中。
+    wx.ready(function(){
+        // 获取“分享到朋友圈”按钮点击状态及自定义分享内容接口
+        wx.onMenuShareTimeline({
+                title: '狼哥哥', // 分享标题
+                link: 'http://www.sisobrand.com/', // 分享链接
+                imgUrl: 'assets/images/s6-nangua.png', // 分享图标
+                success: function () {
+                            // 用户确认分享后执行的回调函数
+                            alert('分享成功');
+                },
+                cancel: function () {
+                    // 用户取消分享后执行的回调函数
+                    alert('取消分享');
+                }
+        });
+
+        // 获取“分享给朋友”按钮点击状态及自定义分享内容接口
+        wx.onMenuShareAppMessage({
+            title: '', // 分享标题
+            desc: '', // 分享描述
+            link: '', // 分享链接
+            imgUrl: '', // 分享图标
+            type: '', // 分享类型,music、video或link，不填默认为link
+            dataUrl: '', // 如果type是music或video，则要提供数据链接，默认为空
+            success: function () {
+                // 用户确认分享后执行的回调函数
+            },
+            cancel: function () {
+                // 用户取消分享后执行的回调函数
+            }
+        });
+    })
+</script>
 </body>
 </html>

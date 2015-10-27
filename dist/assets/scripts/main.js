@@ -198,7 +198,7 @@ var app = {
 
         //  finished game, generate final picture,
         //  unlock swipers
-        var finalPicture = null;
+        that.finalPicture = null;
 
         $('.scene04 .confirm').on('click', function () {
             isFinishedGame = true;
@@ -206,7 +206,7 @@ var app = {
             app.mySwiper.unlockSwipes();
 
             //  general final picture
-            finalPicture = app.pictureGenerator.generalFinalPicture();
+            that.finalPicture = app.pictureGenerator.generalFinalPicture();
             console.log(finalPicture);
 
             // open float window
@@ -215,16 +215,35 @@ var app = {
 
         //  微信分享
         $('.scene04 .float .forward').on('click', function () {
-            if (finalPicture) {
-                //  code here...
+            if (that.finalPicture) {
+                //  send image to server via socket.io
+                server.saveImage(that.finalPicture);
             } else {
                 alert('您还未生成您的照片,请前往选择面具页面进行打扮~');
             }
         });
     },
 
+    server: {
+        init: function () {
+            console.log("Initializing server...");
+            this.socket = io.connect('http://120.26.48.94:1243');
+        },
+
+        saveImage: function (imgSrc) {
+            //  generate image object which will be send to server
+            var img = {};
+            img['a' + new Date().getTime()] = imgSrc;
+
+            //  save image
+            console.log('save img');
+            socket.emit('saveImage', img);
+        }
+    },
+
     start: function (){
         this.create();
+        this.server.init();
     }
 };
 

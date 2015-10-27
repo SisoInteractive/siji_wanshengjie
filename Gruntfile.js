@@ -24,7 +24,7 @@ module.exports = function (grunt){
             build: {
                 files: [
                     {
-                        src: [ 'assets/scripts/*', 'assets/stylesheets/*', 'assets/images/*', 'assets/audio/*', '*.html'],
+                        src: [ 'assets/scripts/*', 'assets/stylesheets/*', 'assets/images/*', 'assets/audio/*', '*.html', '*.php'],
                         dest: 'dist/',
                         expand: true
                     }
