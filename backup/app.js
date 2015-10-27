@@ -46,6 +46,8 @@ MongoClient.connect('mongodb://localhost:27017/siji_wanshengjie', function (err,
             db.collection('numberOfSavedImages:').update({"numberOfSavedImages:": {$exists: 1}}, {$inc: {"numberOfSavedImages:": 1}});
             db.collection('saveImages').update({'saveImages': {$exists:1}}, {$set: data});
 
+            //  send result to client
+            that.emit('saveImageResult', { result: true });
         }
 
         //  on get image

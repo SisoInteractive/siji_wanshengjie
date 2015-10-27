@@ -193,32 +193,26 @@ $signPackage = $jssdk->GetSignPackage();
     wx.ready(function(){
         // 获取“分享到朋友圈”按钮点击状态及自定义分享内容接口
         wx.onMenuShareTimeline({
-                title: '狼哥哥', // 分享标题
-                link: 'http://www.sisobrand.com/', // 分享链接
-                imgUrl: 'assets/images/s6-nangua.png', // 分享图标
+                title: '家庭万圣节奇幻之旅·大连四季上东', // 分享标题
+                link: 'http://www.subo9.com/huodong/siji_wanshengjie/read.html?imgId=' + window.imgId, // 分享链接
+                imgUrl: 'http://www.subo9.com/huodong/siji_wanshengjie/assets/images/share-icon.jpg', // 分享图标
                 success: function () {
-                            // 用户确认分享后执行的回调函数
-                            alert('分享成功');
                 },
                 cancel: function () {
-                    // 用户取消分享后执行的回调函数
-                    alert('取消分享');
                 }
         });
 
         // 获取“分享给朋友”按钮点击状态及自定义分享内容接口
         wx.onMenuShareAppMessage({
-            title: '', // 分享标题
+            title: '家庭万圣节奇幻之旅·大连四季上东', // 分享标题
             desc: '', // 分享描述
-            link: '', // 分享链接
-            imgUrl: '', // 分享图标
+            link: 'http://www.subo9.com/huodong/siji_wanshengjie/read.html?imgId=' + window.imgId // 分享链接
+            imgUrl: 'http://www.subo9.com/huodong/siji_wanshengjie/assets/images/share-icon.jpg', // 分享图标
             type: '', // 分享类型,music、video或link，不填默认为link
             dataUrl: '', // 如果type是music或video，则要提供数据链接，默认为空
             success: function () {
-                // 用户确认分享后执行的回调函数
             },
             cancel: function () {
-                // 用户取消分享后执行的回调函数
             }
         });
     })

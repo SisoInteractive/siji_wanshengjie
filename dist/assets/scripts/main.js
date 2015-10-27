@@ -207,7 +207,7 @@ var app = {
 
             //  general final picture
             that.finalPicture = app.pictureGenerator.generalFinalPicture();
-            console.log(finalPicture);
+            console.log(that.finalPicture);
 
             // open float window
             $('.scene04 .float').fadeIn();
@@ -227,17 +227,25 @@ var app = {
     server: {
         init: function () {
             console.log("Initializing server...");
-            this.socket = io.connect('http://120.26.48.94:1243');
+            this.socket = io.connect('http://120.26.48.94:1244');
         },
 
         saveImage: function (imgSrc) {
             //  generate image object which will be send to server
             var img = {};
-            img['a' + new Date().getTime()] = imgSrc;
+            var imgID = 'a' + new Date().getTime();
+            img[imgID] = imgSrc;
 
             //  save image
             console.log('save img');
-            socket.emit('saveImage', img);
+            this.socket.emit('saveImage', img);
+
+            this.socket.on('saveImageResult', function (result) {
+                if (result.result == true) {
+                    alert('imgID: ' + imgID);
+                    window.imgID = imgID;
+                }
+            });
         }
     },
 
